@@ -1,0 +1,105 @@
+package insert_search_delete_BST;
+
+public class Tree {
+
+	static class Node{
+		int weight;
+		Node left;
+		Node right;
+		Node(int weight){
+			this.weight = weight;
+		}
+	}
+	
+	Node root;
+	
+	Tree(){
+		root = null;
+	}
+	
+	public static void main(String args[]) {
+		Tree tree = new Tree();
+		tree.insert(50); 
+	    tree.insert(30); 
+	    tree.insert(20); 
+	    tree.insert(40); 
+	    tree.insert(70); 
+	    tree.insert(60); 
+	    tree.insert(80); 
+	    System.out.println("Inorder Traversal : ");
+	    inorder(tree.root);
+	    
+	    tree.delete(20);
+	    
+	    System.out.println("\n\nModified Inorder Traversal after deleting node 20 : ");
+	    inorder(tree.root);
+	    
+	    tree.delete(50);
+	    
+	    System.out.println("\n\nModified Inorder Traversal after deleting node 50 : ");
+	    inorder(tree.root);
+	}
+	
+	public void delete(int num) {
+		root = deleteRec(root,num); 
+	}
+	
+	public Node deleteRec(Node root, int num) {
+		if(num<root.weight)
+			root.left = deleteRec(root.left,num);
+		else if(num>root.weight)
+			root.right = deleteRec(root.right,num);
+		else {
+			if(root.left==null)
+				return root.right;
+			else if(root.right==null)
+				return root.left;
+			
+			Node min = findMin(root.right);
+			
+			root.weight = min.weight;
+			
+			root.right = deleteRec(root.right,root.weight);
+		}
+		
+		return root;
+	}
+	
+	public Node findMin(Node root) {
+		Node min = root;
+		
+		while(root.left!=null) {
+			min = root;
+			root = root.left;
+		}
+		
+		return min;
+	}
+	
+	public void insert(int num) {
+		root = insertRec(root,num);
+	}
+	
+	public Node insertRec(Node root, int num) {
+		if(root==null) {
+			root = new Node(num);
+		}
+		
+		if(root.weight > num)
+			root.left = insertRec(root.left,num);
+		
+		if(root.weight < num)
+			root.right = insertRec(root.right,num);
+		
+		return root;
+	}
+	
+	public static void inorder(Node root) {
+		if(root.left!=null)
+			inorder(root.left);
+		System.out.print(root.weight +"   ");
+		if(root.right!=null)
+			inorder(root.right);
+	}
+	
+}
