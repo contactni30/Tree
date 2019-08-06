@@ -1,0 +1,49 @@
+package createBSTFromPreorder;
+
+public class Tree {
+
+	static class Node{
+		int weight;
+		Node left;
+		Node right;
+		Node(int weight){
+			this.weight = weight;
+		}
+	}
+	static int preIndex = 0;
+	
+	public static void main(String args[]) {
+		Tree tree = new Tree();
+		 int pre[] = new int[]{10, 5, 1, 7, 40, 50};
+		 int len = pre.length;
+		 Node root = tree.createBST(pre,len,Integer.MIN_VALUE,Integer.MAX_VALUE);
+		 
+		 tree.inorder(root);
+	}
+	
+	public void inorder(Node root) {
+		if(root.left!=null)
+			inorder(root.left);
+		System.out.print(root.weight+"   ");
+		if(root.right!=null)
+			inorder(root.right);
+	}
+	
+	public Node createBST(int[] pre, int len, int minVal, int maxVal) {
+		if(preIndex >= len) {
+			return null;
+		}
+			Node root = null;
+		if(pre[preIndex]>minVal && pre[preIndex]<maxVal) {
+			root = new Node(pre[preIndex]);
+			
+			preIndex++;
+			
+			
+			root.left = createBST(pre,len,minVal,root.weight);
+			root.right = createBST(pre,len,root.weight,maxVal);
+		}
+		return root;
+
+	}
+}
