@@ -1,0 +1,157 @@
+package bstnew;
+
+
+public class BinarySearchTree {
+
+	static class Node{
+		int key;
+		Node left;
+		Node right;
+		Node parent;
+		Node(int key, Node left, Node right, Node parent){
+			this.key = key;
+			this.left = left;
+			this.right = right;
+			this.parent = parent;
+		}
+	}
+	
+	static Node root;
+	
+	public static void main(String args[]) {
+		insert(15);
+		insert(17);insert(20);
+		insert(18);insert(6);
+		insert(7);insert(2);
+		insert(3);insert(4);
+		insert(13);insert(9);
+		
+		inorder(root);
+		//System.out.println(search(root,13).key);
+		System.out.println();
+		//System.out.println(maximum(root).key);
+		//System.out.println(minimum(root).key);
+		//System.out.println(predecessor(search(root,18)).key);
+		//System.out.println(successor(search(root,4)).key);
+		delete(search(root,13));
+		inorder(root);
+		
+		System.out.println();
+		delete(search(root,7));
+		inorder(root);
+		
+		System.out.println();
+		delete(search(root,18));
+		inorder(root);
+	}
+	
+	public static void delete(Node x) {
+		if(x.left==null) {
+			transplant(x,x.right);
+		}else if(x.right == null) {
+			transplant(x,x.left);
+		}else {
+			Node  y = minimum(x.right);
+			if(x.right!=y) {
+				transplant(y,y.right);
+				y.right = x.right;
+				y.right.parent = y;
+			}
+			transplant(x,y);
+			y.left = x.left;
+			y.left.parent = y;
+		}
+	}
+	
+	public static void transplant(Node x, Node y) {
+		if(x.parent==null) {
+			root = y;
+		}else if(x.parent.left == x) {
+			x.parent.left = y;
+		}else {
+			x.parent.right = y;
+		}
+		
+		if(y!=null) {
+			y.parent = x.parent;
+		}
+	}
+	
+	public static Node successor(Node x) {
+		if(x.right!=null) {
+			return minimum(x.right);
+		}else {
+			while(x.parent!=null && x.parent.left!=x) {
+				x = x.parent;
+			}
+			return x.parent;
+		}
+	}
+	
+	public static Node predecessor(Node x) {
+		if(x.left!=null) {
+			return maximum(x.left);
+		}else {
+			while(x.parent!=null && x.parent.right!=x) {
+				x = x.parent;
+			}
+			return x.parent;
+		}
+	}
+	
+	public static Node minimum(Node root) {
+		while(root.left!=null){
+			root = root.left;
+		}
+		return root;
+	}
+	
+	public static Node maximum(Node root) {
+		while(root.right!=null) {
+			root = root.right;
+		}
+		return root;
+	}
+	
+	public static Node search(Node root, int key) {
+		while(root!=null && root.key!=key) {
+			if(key<root.key)
+				root = root.left;
+			else
+				root = root.right;
+		}
+		return root;
+	}
+	
+	public static void inorder(Node root) {
+		if(root.left!=null)
+			inorder(root.left);
+		System.out.print(root.key+"   ");
+		if(root.right!=null)
+			inorder(root.right);
+	}
+	
+	public static void insert(int key) {
+		if(root==null) {
+			root = new Node(key,null,null,null);
+		}else {
+			Node x = root;
+			Node y = null;
+			while(x!=null) {
+				y = x;
+				if(key<x.key)
+					x = x.left;
+				else
+					x = x.right;
+			}
+			
+			Node node = new Node(key,null,null,null);
+			node.parent = y;
+			
+			if(key<y.key)
+				y.left = node;
+			else
+				y.right = node;
+		}
+	}
+}
