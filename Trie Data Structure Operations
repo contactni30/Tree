@@ -1,0 +1,26 @@
+	public boolean deleteRec(String word, TrieNode current, int index) {
+		if(index == word.length()) {
+			if(current.endOfWord && current.node.size()==0) {
+				return true;
+			}
+			if(current.endOfWord) {
+				current.endOfWord = false;
+			}
+			return false;
+		}
+		
+		char ch = word.charAt(index);
+		TrieNode children = current.node.get(ch);
+		
+		if(children==null) {
+			return false;
+		}
+		
+		boolean canDelete = deleteRec(word,children,index+1);
+		
+		if(canDelete) {
+			current.node.remove(ch);
+			return current.node.size()==0;
+		}
+		return false;
+	}
